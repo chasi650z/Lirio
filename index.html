@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#09070e" />
+    <title>Lirio de araña roja · Lycoris radiata</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --ivory: #fff1e8;
+            --rose: #e95a67;
+            --soft: #cba5a9;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            background: #09070e;
+            color: var(--ivory);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .scene {
+
+            --petal-1: #ff6b6b;
+            --petal-2: #e52e4a;
+            --petal-3: #af092e;
+            --petal-4: #780a27;
+            --filament-1: #ff6a75;
+            --filament-2: #fa6573;
+            --filament-3: #ffc0ab;
+            --center-1: #ffd5af;
+            --center-2: #ff7774;
+            --center-3: #b10a30;
+            --center-4: #75041f;
+            --petal-outline: #ff7b75;
+            --petal-highlight: #ff9b92;
+            --crown-glow: rgba(242, 48, 66, .64);
+            --flower-shadow: rgba(209, 21, 53, .24);
+            --floor-tint: #8c2039;
+            --petal-rain-light: #ff8b8c;
+            --petal-rain-dark: #ae102d;
+            --petal-rain-glow: #d9163670;
+            --mote-flower: #f45e79;
+            --mote-glow: #e83d75aa;
+            --scene-glow-1: rgba(152, 19, 43, .27);
+            --scene-glow-2: rgba(93, 19, 41, .44);
+            min-height: 100svh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            isolation: isolate;
+            background:
+                radial-gradient(ellipse 37% 42% at 51% 63%, var(--scene-glow-1), transparent 79%),
+                radial-gradient(ellipse 65% 42% at 50% 99%, var(--scene-glow-2), transparent 80%),
+                radial-gradient(ellipse 62% 45% at 28% 14%, rgba(53, 22, 47, .23), transparent 85%),
+                linear-gradient(180deg, #070912 0%, #0c0813 49%, #110710 100%);
+        }
+
+        .scene.purple-theme {
+            --petal-1: #d6a0ff;
+            --petal-2: #a44cf3;
+            --petal-3: #7726c8;
+            --petal-4: #471368;
+            --filament-1: #dfacff;
+            --filament-2: #af69f9;
+            --filament-3: #ebc8ff;
+            --center-1: #f4d9ff;
+            --center-2: #ba79f5;
+            --center-3: #7823b8;
+            --center-4: #43106f;
+            --petal-outline: #dfa9ff;
+            --petal-highlight: #f0ccff;
+            --crown-glow: rgba(169, 73, 250, .65);
+            --flower-shadow: rgba(147, 52, 235, .32);
+            --floor-tint: #683694;
+            --petal-rain-light: #ddb0ff;
+            --petal-rain-dark: #7525c6;
+            --petal-rain-glow: #9b52e570;
+            --mote-flower: #b97aff;
+            --mote-glow: #9254edaa;
+            --scene-glow-1: rgba(120, 46, 166, .29);
+            --scene-glow-2: rgba(66, 25, 116, .44);
+        }
+
+        .scene::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: .32;
+            pointer-events: none;
+            background-image: radial-gradient(#ffd9c0 .65px, transparent .9px), radial-gradient(#fff3ed .55px, transparent .95px);
+            background-size: 137px 131px, 193px 167px;
+            background-position: 30px 55px, 92px 20px;
+        }
+
+        .moon {
+            position: absolute;
+            width: 200px;
+            aspect-ratio: 1;
+            top: 17%;
+            right: 13%;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle at 39% 38%, rgba(255, 214, 187, .42), rgba(202, 102, 107, .15) 48%, rgba(92, 38, 66, .06) 72%, transparent 75%);
+            box-shadow: 0 0 85px 38px rgba(176, 57, 78, .08);
+            opacity: .55;
+            filter: blur(.4px);
+        }
+
+        .ambient {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 3;
+        }
+
+        .mote {
+            position: absolute;
+            border-radius: 50%;
+            width: var(--size);
+            height: var(--size);
+            background: var(--color);
+            box-shadow: 0 0 12px 3px var(--glow);
+            opacity: 0;
+            animation: firefly var(--time) ease-in-out var(--delay) infinite alternate;
+        }
+
+        @keyframes firefly {
+            0% {
+                opacity: .04;
+                transform: translate3d(0, 9px, 0) scale(.65)
+            }
+
+            50% {
+                opacity: .72
+            }
+
+            100% {
+                opacity: .05;
+                transform: translate3d(var(--dx), -45px, 0) scale(1.18)
+            }
+        }
+
+        .heading {
+            position: relative;
+            text-align: center;
+            z-index: 5;
+            padding: 58px 20px 0;
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: .41em;
+            text-transform: uppercase;
+            color: #e8a7ad;
+            font-weight: 650;
+            margin: 0 0 18px;
+        }
+
+        h1 {
+            font-family: Georgia, 'Times New Roman', serif;
+            font-weight: 400;
+            line-height: 1.06;
+            letter-spacing: -.04em;
+            font-size: clamp(2.9rem, 6.8vw, 5.7rem);
+            margin: 0;
+            background: linear-gradient(180deg, #fff8f1, #f9c5bd 82%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 13px 60px rgba(224, 66, 87, .20);
+        }
+
+        .latin {
+            font-family: Georgia, serif;
+            font-size: clamp(13px, 1.5vw, 17px);
+            letter-spacing: .16em;
+            color: #dd8793;
+            font-style: italic;
+            margin: 15px 0 0;
+        }
+
+        .garden {
+            position: relative;
+            flex: 1;
+            min-height: 410px;
+            width: 100%;
+            max-width: 1600px;
+            display: flex;
+            align-items: end;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .garden::after {
+            content: "";
+            position: absolute;
+            left: 14%;
+            right: 14%;
+            height: 79px;
+            bottom: -42px;
+            border-radius: 50%;
+            background: var(--floor-tint);
+            filter: blur(48px);
+            opacity: .25;
+            pointer-events: none;
+        }
+
+        .artwork {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(1260px, 100vw);
+            height: 100%;
+            overflow: visible;
+            filter: drop-shadow(0 0 19px var(--flower-shadow));
+        }
+
+        .ground {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            height: 70px;
+            background: radial-gradient(ellipse at 50% 75%, rgba(77, 32, 43, .56), transparent 73%);
+            pointer-events: none;
+        }
+
+        .stem-path {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: stemUp 2.65s cubic-bezier(.23, .65, .21, 1) var(--start) forwards;
+        }
+
+        .branch-path {
+            stroke-dasharray: 1;
+            stroke-dashoffset: 1;
+            animation: stemUp 1.16s ease-out calc(var(--start) + 1.75s) forwards;
+        }
+
+        @keyframes stemUp {
+            to {
+                stroke-dashoffset: 0
+            }
+        }
+
+        .floret {
+            opacity: 0;
+            transform: scale(.08) rotate(-21deg);
+            transform-box: fill-box;
+            transform-origin: center center;
+            animation: flowerOpen 1.55s cubic-bezier(.2, .85, .3, 1.08) var(--bloom-delay) forwards;
+        }
+
+        @keyframes flowerOpen {
+            0% {
+                opacity: 0;
+                transform: scale(.06) rotate(-27deg)
+            }
+
+            67% {
+                opacity: 1;
+                transform: scale(1.1) rotate(4deg)
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg)
+            }
+        }
+
+        .petal-stroke {
+            stroke: var(--petal-outline);
+            stroke-opacity: .62;
+            stroke-width: .62;
+            vector-effect: non-scaling-stroke;
+        }
+
+        .petal-highlight {
+            fill: none;
+            stroke: var(--petal-highlight);
+            stroke-opacity: .63;
+            stroke-width: .9;
+            stroke-linecap: round;
+        }
+
+        .stamen {
+            fill: none;
+            stroke: url(#filamentGradient);
+            stroke-linecap: round;
+            stroke-width: 1.75;
+        }
+
+        .anther {
+            fill: #ffd7a0;
+            filter: url(#antherGlow);
+        }
+
+        .crown {
+            filter: drop-shadow(0 0 10px var(--crown-glow));
+        }
+
+        .bottom {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            max-width: 640px;
+            padding: 4px 22px 33px;
+        }
+
+        .message {
+            margin: 0 auto 20px;
+            font-family: Georgia, serif;
+            font-size: clamp(15px, 1.7vw, 20px);
+            font-style: italic;
+            color: #e6c0bf;
+            line-height: 1.6;
+            letter-spacing: .01em;
+        }
+
+        button {
+            appearance: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 650;
+            border-radius: 100px;
+            letter-spacing: .02em;
+            padding: 13px 23px;
+            transition: transform .2s, background .2s, border-color .2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px)
+        }
+
+        button:focus-visible {
+            outline: 2px solid #ffd7a0;
+            outline-offset: 4px;
+        }
+
+        .primary {
+            border: 1px solid #f19d9f;
+            color: #200b14;
+            background: linear-gradient(135deg, #f8bec0, #e8798c);
+            box-shadow: 0 4px 27px rgba(222, 56, 80, .26);
+        }
+
+        .replay-button {
+            position: absolute;
+            bottom: 25px;
+            left: 27px;
+            z-index: 7;
+        }
+
+        .color-toggle {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            z-index: 9;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(17, 12, 28, .75);
+            border: 1px solid rgba(210, 165, 218, .45);
+            color: #f7e9fc;
+            border-radius: 999px;
+            font-size: 11px;
+            backdrop-filter: blur(9px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .18);
+        }
+
+        .color-toggle:hover {
+            background: rgba(47, 26, 63, .9);
+        }
+
+        .color-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #b16cf2;
+            box-shadow: 0 0 7px rgba(186, 103, 247, .6);
+            flex: 0 0 auto;
+        }
+
+        .purple-theme .color-dot {
+            background: #f14b69;
+            box-shadow: 0 0 7px rgba(241, 75, 105, .6);
+        }
+
+
+        .music-tap-hint {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            z-index: 10;
+            max-width: calc(100% - 145px);
+            padding: 9px 12px;
+            border-radius: 999px;
+            background: rgba(15, 12, 25, .79);
+            border: 1px solid rgba(218, 168, 217, .32);
+            color: #f4dce8;
+            font: 600 11px 'Segoe UI', Arial, sans-serif;
+            line-height: 1.3;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+            pointer-events: none;
+            backdrop-filter: blur(9px);
+        }
+
+        .music-tap-hint[hidden] {
+            display: none !important;
+        }
+
+        .petal-drift {
+            top: -28px;
+            left: var(--x);
+            width: var(--petal-w, 9px);
+            height: var(--petal-h, 21px);
+            border-radius: 100% 8% 100% 4%;
+            background: linear-gradient(150deg, var(--petal-rain-light), var(--petal-rain-dark));
+            filter: drop-shadow(0 0 6px var(--petal-rain-glow));
+            opacity: 0;
+            z-index: 4;
+            animation: petalFall var(--fall-time) linear var(--fall-delay) infinite;
+        }
+
+        @keyframes petalFall {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, -22px, 0) rotate(0deg)
+            }
+
+            8% {
+                opacity: .8
+            }
+
+            80% {
+                opacity: .73
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate3d(var(--drift), 110vh, 0) rotate(490deg)
+            }
+        }
+
+        .footerline {
+            position: absolute;
+            bottom: 12px;
+            right: 21px;
+            color: #8b6570;
+            font-size: 10px;
+            letter-spacing: .08em;
+            z-index: 4;
+        }
+
+        @media(max-width:700px) {
+            .heading {
+                padding-top: 54px
+            }
+
+            .eyebrow {
+                letter-spacing: .26em;
+                font-size: 10px
+            }
+
+            .latin {
+                margin-top: 11px
+            }
+
+            .moon {
+                right: -52px;
+                top: 24%;
+                width: 160px
+            }
+
+            .garden {
+                min-height: 450px
+            }
+
+            .artwork {
+                width: 930px;
+                max-width: none;
+                height: 100%;
+                bottom: -5px
+            }
+
+            .bottom {
+                padding: 6px 16px 78px
+            }
+
+            .message {
+                font-size: 15px;
+                margin-bottom: 0
+            }
+
+            button {
+                padding: 12px 17px;
+                font-size: 12px
+            }
+
+            .replay-button {
+                bottom: 17px;
+                left: 15px
+            }
+
+            .footerline {
+                display: none
+            }
+        }
+
+        @media(max-height:700px) and (min-width:701px) {
+            .heading {
+                padding-top: 27px
+            }
+
+            .garden {
+                min-height: 325px
+            }
+
+            .bottom {
+                padding-bottom: 16px
+            }
+
+            .message {
+                margin-bottom: 11px
+            }
+
+            .artwork {
+                width: 1050px
+            }
+        }
+
+        @media(prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-delay: 0ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important
+            }
+
+            .mote,
+            .petal-drift {
+                display: none !important
+            }
+
+            .stem-path,
+            .branch-path {
+                stroke-dashoffset: 0
+            }
+
+            .floret {
+                opacity: 1;
+                transform: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="scene" id="scene">
+        <div class="moon" aria-hidden="true"></div>
+        <button class="color-toggle" id="colorToggle" type="button" aria-label="Cambiar lirios a morado"
+            aria-pressed="false" title="Cambiar a morado">
+            <span class="color-dot" aria-hidden="true"></span>
+            <span id="colorLabel">Morado</span>
+        </button>
+        <div class="music-tap-hint" id="musicTapHint" role="status" aria-live="polite" hidden>♫ Toca para activar la
+            música</div>
+        <div class="ambient" id="particles" aria-hidden="true"></div>
+        <header class="heading">
+            <p class="eyebrow">✦ un jardín bajo las estrellas para ti✦</p>
+            <h1>Lirio de araña</h1>
+            <p class="latin">Lycoris radiata</p>
+            <p class="latin">Un abrazo para quienes ya no estan con nosotros</p>
+        </header>
+        <section class="garden" aria-label="Cinco lirios de araña roja que crecen y abren sus pétalos">
+            <span class="ground" aria-hidden="true"></span>
+            <svg class="artwork" id="flowers" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620"
+                preserveAspectRatio="xMidYMax meet" role="img"
+                aria-label="Un jardín nocturno de lirios rojos con pétalos finos y largos estambres curvos">
+                <defs>
+                    <linearGradient id="stemGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop stop-color="#214e3c" />
+                        <stop offset=".45" stop-color="#58936c" />
+                        <stop offset="1" stop-color="#193f35" />
+                    </linearGradient>
+                    <linearGradient id="petalGradient" x1="0" y1="0" x2=".7" y2="1">
+                        <stop stop-color="#ff6b6b" style="stop-color: var(--petal-1)" />
+                        <stop offset=".34" stop-color="#e52e4a" style="stop-color: var(--petal-2)" />
+                        <stop offset=".82" stop-color="#af092e" style="stop-color: var(--petal-3)" />
+                        <stop offset="1" stop-color="#780a27" style="stop-color: var(--petal-4)" />
+                    </linearGradient>
+                    <linearGradient id="filamentGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop stop-color="#ff6a75" style="stop-color: var(--filament-1)" />
+                        <stop offset=".55" stop-color="#fa6573" style="stop-color: var(--filament-2)" />
+                        <stop offset="1" stop-color="#ffc0ab" style="stop-color: var(--filament-3)" />
+                    </linearGradient>
+                    <radialGradient id="centerGradient">
+                        <stop stop-color="#ffd5af" style="stop-color: var(--center-1)" />
+                        <stop offset=".32" stop-color="#ff7774" style="stop-color: var(--center-2)" />
+                        <stop offset=".85" stop-color="#b10a30" style="stop-color: var(--center-3)" />
+                        <stop offset="1" stop-color="#75041f" style="stop-color: var(--center-4)" />
+                    </radialGradient>
+                    <filter id="antherGlow" x="-250%" y="-250%" width="600%" height="600%">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation=".4" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g id="gardenArt"></g>
+            </svg>
+        </section>
+        <div class="bottom">
+            <p class="message">“Incluso en la oscuridad, hay cosas que florecen. Así que sonríe”</p>
+        </div>
+        <button class="primary replay-button" type="button" id="replay" aria-label="Volver a florecer los lirios">↻
+            Volver a florecer</button>
+        <span class="footerline">Un pequeño detalle para ti Mica, espero haberte sacado una sonrisa jeje </span>
+    </main>
+    <audio id="gardenSoundtrack" preload="auto" loop aria-hidden="true" src="assets/in-the-pool-desde-2m04.mp3"></audio>
+    <script>
+
+        const SVG = 'http://www.w3.org/2000/svg';
+        const art = document.getElementById('gardenArt');
+        const ambient = document.getElementById('particles');
+        const scene = document.getElementById('scene');
+        const flowerData = [
+            { x: 225, y: 325, baseX: 250, scale: .76, delay: .30, lean: -15 },
+            { x: 410, y: 385, baseX: 418, scale: .59, delay: .84, lean: 9 },
+            { x: 600, y: 176, baseX: 568, scale: 1.03, delay: .58, lean: -24 },
+            { x: 785, y: 395, baseX: 797, scale: .61, delay: 1.04, lean: 16 },
+            { x: 974, y: 327, baseX: 947, scale: .80, delay: .48, lean: 13 }
+        ];
+        const blossoms = [
+            { dx: -66, dy: -1, rot: -13, s: .62 }, { dx: -27, dy: -32, rot: -5, s: .67 },
+            { dx: 26, dy: -40, rot: 12, s: .72 }, { dx: 73, dy: -10, rot: 20, s: .64 },
+            { dx: -24, dy: 30, rot: -9, s: .60 }, { dx: 43, dy: 33, rot: 11, s: .61 }
+        ];
+        const create = (tag, attrs = {}, parent) => {
+            const el = document.createElementNS(SVG, tag);
+            Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, String(v)));
+            if (parent) parent.appendChild(el);
+            return el;
+        };
+        function addFloret(container, flowerIndex, p, i) {
+
+            const bloom = create('g', { transform: `translate(${p.dx} ${p.dy}) rotate(${p.rot}) scale(${p.s})` }, container);
+            const opening = create('g', { class: 'floret', style: `--bloom-delay:${(flowerData[flowerIndex].delay + 1.95 + i * .16).toFixed(2)}s` }, bloom);
+            const petalGroup = create('g', {}, opening);
+            for (let j = 0; j < 6; j++) {
+                const angle = j * 60 + (i % 2 === 0 ? 4 : -3);
+                const ray = create('g', { transform: `rotate(${angle})` }, petalGroup);
+                create('path', { d: 'M -2 4 C -10 -14 -29 -34 -31 -56 C -34 -77 -20 -98 0 -110 C -12 -90 -21 -75 -18 -57 C -13 -33 -2 -18 2 0 Z', fill: 'url(#petalGradient)', class: 'petal-stroke' }, ray);
+                create('path', { d: 'M -1 -2 C -9 -27 -25 -48 -25 -65 C -24 -81 -15 -96 -4 -103', class: 'petal-highlight' }, ray);
+            }
+            for (let j = 0; j < 6; j++) {
+                const angle = j * 60 + 19 + (i % 3) * 3;
+                const filament = create('g', { transform: `rotate(${angle})` }, opening);
+                const length = j % 2 === 0 ? 1 : .90;
+                const tipX = 85 * length;
+                const tipY = -84 * length;
+                create('path', { d: `M 0 0 C -5 -24 10 -54 32 -75 C 52 -96 ${tipX - 11} ${tipY - 14} ${tipX} ${tipY}`, class: 'stamen' }, filament);
+                create('ellipse', { cx: tipX, cy: tipY, rx: 4.6, ry: 2.15, transform: `rotate(-28 ${tipX} ${tipY})`, class: 'anther' }, filament);
+            }
+            create('circle', { cx: 0, cy: 0, r: 6.1, fill: 'url(#centerGradient)', class: 'crown' }, opening);
+            for (let k = 0; k < 6; k++)create('circle', { cx: Math.cos(k * Math.PI / 3) * 3.8, cy: Math.sin(k * Math.PI / 3) * 3.8, r: .9, fill: '#ffd0a2' }, opening);
+        }
+        function renderFlowers() {
+            art.innerHTML = '';
+            flowerData.forEach((f, index) => {
+                const stalk = create('g', {}, art);
+                const sx = f.x;
+                const sy = f.y;
+                const curve = `M ${f.baseX} 630 C ${f.baseX + f.lean * .4} 520 ${sx + f.lean * 2} ${sy + 140} ${sx} ${sy}`;
+                create('path', { d: curve, fill: 'none', stroke: '#12382f', 'stroke-width': 8, 'stroke-linecap': 'round', opacity: .68 }, stalk);
+                create('path', { d: curve, fill: 'none', stroke: 'url(#stemGradient)', 'stroke-width': 5, 'stroke-linecap': 'round', pathLength: 1, class: 'stem-path', style: `--start:${f.delay}s` }, stalk);
+
+                const branchGroup = create('g', { transform: `translate(${sx} ${sy}) scale(${f.scale})` }, stalk);
+                blossoms.forEach((b, j) => {
+                    const d = `M 0 0 Q ${b.dx * .22} ${b.dy * .64 + 17} ${b.dx} ${b.dy}`;
+                    create('path', { d, fill: 'none', stroke: '#365f43', 'stroke-width': 2.8, 'stroke-linecap': 'round', opacity: .65 }, branchGroup);
+                    create('path', { d, fill: 'none', stroke: '#73956e', 'stroke-width': 1.9, 'stroke-linecap': 'round', pathLength: 1, class: 'branch-path', style: `--start:${f.delay}s` }, branchGroup);
+                });
+
+                blossoms.forEach((b, j) => addFloret(branchGroup, index, b, j));
+            });
+        }
+        let seed = 1182;
+        function random() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+        function spawnMotes() {
+            ambient.innerHTML = ''; seed = 1182;
+            for (let i = 0; i < 53; i++) {
+                const m = document.createElement('span'); m.className = 'mote';
+                const warm = i % 4 === 0;
+                m.style.cssText = `left:${(random() * 100).toFixed(2)}%;top:${(24 + random() * 71).toFixed(2)}%;--size:${(1.4 + random() * 2.4).toFixed(1)}px;--time:${(3 + random() * 5).toFixed(2)}s;--delay:${(-random() * 7).toFixed(2)}s;--dx:${Math.round((random() - .5) * 60)}px;--color:${warm ? '#ffc8a3' : 'var(--mote-flower)'};--glow:${warm ? '#ffd5a3aa' : 'var(--mote-glow)'};`;
+                ambient.appendChild(m);
+            }
+        }
+
+        function spawnPetalRain() {
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('span'); p.className = 'petal-drift';
+                const duration = 8 + random() * 9;
+                const width = 5 + random() * 7;
+                p.style.cssText = `--x:${(random() * 100).toFixed(2)}%;--drift:${Math.round((random() - .5) * 320)}px;--fall-time:${duration.toFixed(1)}s;--fall-delay:${(-random() * duration).toFixed(1)}s;--petal-w:${width.toFixed(1)}px;--petal-h:${(width * 2.12).toFixed(1)}px;`;
+                ambient.appendChild(p);
+            }
+        }
+        function syncFallDistance() {
+            scene.style.setProperty('--fall-distance', `${scene.offsetHeight + 80}px`);
+        }
+
+        const colorToggle = document.getElementById('colorToggle');
+        const colorLabel = document.getElementById('colorLabel');
+        colorToggle.addEventListener('click', () => {
+            const purple = scene.classList.toggle('purple-theme');
+            colorLabel.textContent = purple ? 'Rojo' : 'Morado';
+            colorToggle.setAttribute('aria-label', purple ? 'Cambiar lirios a rojo' : 'Cambiar lirios a morado');
+            colorToggle.setAttribute('title', purple ? 'Cambiar a rojo' : 'Cambiar a morado');
+            colorToggle.setAttribute('aria-pressed', String(purple));
+        });
+
+        document.getElementById('replay').addEventListener('click', renderFlowers);
+        spawnMotes();
+        renderFlowers();
+        spawnPetalRain();
+        syncFallDistance();
+        window.addEventListener('resize', syncFallDistance);
+
+        const gardenSoundtrack = document.getElementById('gardenSoundtrack');
+        const musicTapHint = document.getElementById('musicTapHint');
+        gardenSoundtrack.volume = 0.75;
+        let soundtrackStarted = false;
+
+        function soundtrackIsPlaying() {
+            soundtrackStarted = true;
+            musicTapHint.hidden = true;
+            window.removeEventListener('pointerdown', startBackgroundMusic);
+            window.removeEventListener('touchend', startBackgroundMusic);
+            window.removeEventListener('click', startBackgroundMusic);
+            window.removeEventListener('keydown', startBackgroundMusic);
+        }
+
+        function startBackgroundMusic() {
+            if (soundtrackStarted || !gardenSoundtrack.paused) return;
+            gardenSoundtrack.play().then(soundtrackIsPlaying).catch(() => {
+
+                if (!gardenSoundtrack.error) musicTapHint.hidden = false;
+            });
+        }
+
+        gardenSoundtrack.addEventListener('playing', soundtrackIsPlaying);
+        gardenSoundtrack.addEventListener('error', () => {
+            musicTapHint.hidden = false;
+            musicTapHint.textContent = '♫ No se pudo cargar la música';
+        });
+        window.addEventListener('pointerdown', startBackgroundMusic, { passive: true });
+        window.addEventListener('touchend', startBackgroundMusic, { passive: true });
+        window.addEventListener('click', startBackgroundMusic);
+        window.addEventListener('keydown', startBackgroundMusic);
+        startBackgroundMusic();
+
+    </script>
+</body>
+
+</html>
